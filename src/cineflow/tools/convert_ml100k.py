@@ -1,8 +1,9 @@
 """Conversión MovieLens 100K: u.data/u.item -> ratings.csv/movies.csv."""
+
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List, Any, Dict, Optional, cast
+from typing import List, cast
 
 import pandas as pd
 
@@ -15,17 +16,31 @@ def read_genres_list(base: Path) -> List[str]:
     if ugenre.exists():
         lines = ugenre.read_text(encoding="latin-1").splitlines()
         genres: List[str] = [
-            line.split("|")[0].strip()
-            for line in lines
-            if line.strip() and "|" in line
+            line.split("|")[0].strip() for line in lines if line.strip() and "|" in line
         ]
         # Evita listas vacías por líneas en blanco al final
         return [g for g in genres if g]
     # Fallback estándar (19 flags)
     return [
-        "unknown", "Action", "Adventure", "Animation", "Children's", "Comedy", "Crime",
-        "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical", "Mystery",
-        "Romance", "Sci-Fi", "Thriller", "War", "Western",
+        "unknown",
+        "Action",
+        "Adventure",
+        "Animation",
+        "Children's",
+        "Comedy",
+        "Crime",
+        "Documentary",
+        "Drama",
+        "Fantasy",
+        "Film-Noir",
+        "Horror",
+        "Musical",
+        "Mystery",
+        "Romance",
+        "Sci-Fi",
+        "Thriller",
+        "War",
+        "Western",
     ]
 
 
@@ -59,12 +74,14 @@ def convert_movies(base: Path) -> pd.DataFrame:
 
     min_expected = 5 + g
     if ncols < min_expected:
-        raise ValueError(f"u.item tiene {ncols} columnas, pero se esperaban al menos {min_expected}.")
+        raise ValueError(
+            f"u.item tiene {ncols} columnas, pero se esperaban al menos {min_expected}."
+        )
 
     core = raw.iloc[:, [0, 1] + list(range(ncols - g, ncols))].copy()
     core.columns = ["movieId", "title"] + genres_list
 
-    def flags_to_genres(row: pd.Series) -> str: 
+    def flags_to_genres(row: pd.Series) -> str:
         present = [name for name in genres_list if row[name] == 1]
         return "|".join(present) if present else "(no genres listed)"
 

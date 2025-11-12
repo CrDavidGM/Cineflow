@@ -1,8 +1,21 @@
-import subprocess, time, requests
+import subprocess
+import time
+
+import requests
+
 
 def test_genres_top_endpoint() -> None:
     api = subprocess.Popen(
-        ["poetry","run","uvicorn","cineflow.api.main:app","--host","127.0.0.1","--port","8002"]
+        [
+            "poetry",
+            "run",
+            "uvicorn",
+            "cineflow.api.main:app",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8002",
+        ]
     )
     try:
         time.sleep(2.0)

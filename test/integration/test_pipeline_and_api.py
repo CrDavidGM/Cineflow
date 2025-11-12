@@ -1,16 +1,19 @@
 # tests/integration/test_pipeline_and_api.py
 import os
+import subprocess
 import sys
 import time
-import requests
-import subprocess
 from pathlib import Path
+
+import requests
+
 
 def _env_utf8() -> dict[str, str]:
     env = os.environ.copy()
     env.setdefault("PYTHONIOENCODING", "utf-8")
     env.setdefault("UVICORN_ACCESS_LOG", "false")  # menos ruido
     return env
+
 
 def test_pipeline_and_api_smoke() -> None:
     samples = Path("data/samples")
@@ -28,8 +31,16 @@ def test_pipeline_and_api_smoke() -> None:
     print(run.stderr)
 
     api = subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", "cineflow.api.main:app",
-         "--host", "127.0.0.1", "--port", "8001"],
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "cineflow.api.main:app",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8001",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -39,7 +50,7 @@ def test_pipeline_and_api_smoke() -> None:
 
     try:
         base = "http://127.0.0.1:8001"
-        for _ in range(40): 
+        for _ in range(40):
             try:
                 r = requests.get(f"{base}/health", timeout=0.25)
                 if r.status_code == 200:

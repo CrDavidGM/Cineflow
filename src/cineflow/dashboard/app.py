@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from datetime import date
+from typing import Any, Dict, Optional, cast
+
 import pandas as pd
 import streamlit as st
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
-from datetime import date
-from typing import Any, Dict, Optional, cast
 
 from cineflow.utils.config import settings
 
@@ -21,17 +22,19 @@ engine: Engine = create_engine(url, pool_pre_ping=True)
 
 # ---------- Helpers ----------
 
+
 @st.cache_data(ttl=60)
 def load_mv(since: Optional[date]) -> pd.DataFrame:
     sql = "SELECT * FROM mv_daily_metrics"
     params: Dict[str, Any] = {}
     if since is not None:
         sql += " WHERE rating_date >= :since"
-        params["since"] = since 
+        params["since"] = since
     sql += " ORDER BY rating_date"
     with engine.begin() as conn:
         df = pd.read_sql(text(sql), conn, params=params)
         return cast(pd.DataFrame, df)
+
 
 @st.cache_data(ttl=60)
 def load_top_movies(limit: int, min_votes: int, since: Optional[date]) -> pd.DataFrame:
@@ -55,6 +58,7 @@ def load_top_movies(limit: int, min_votes: int, since: Optional[date]) -> pd.Dat
     with engine.begin() as conn:
         df = pd.read_sql(text(sql), conn, params=params)
         return cast(pd.DataFrame, df)
+
 
 @st.cache_data(ttl=60)
 def load_top_genres(limit: int, min_votes: int, since: Optional[date]) -> pd.DataFrame:

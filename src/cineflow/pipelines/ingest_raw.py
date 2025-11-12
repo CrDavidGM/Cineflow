@@ -1,9 +1,10 @@
 """Carga CSVs de MovieLens a MongoDB (colección ratings_raw y movies_raw)."""
+
 from __future__ import annotations
 
-import pandas as pd
 from pathlib import Path
-from typing import Any, Tuple
+
+import pandas as pd
 
 from cineflow.storage.mongo_client import get_mongo
 
@@ -12,7 +13,7 @@ SAMPLES = Path("data/samples")
 
 def main() -> None:
     """Carga ratings.csv y movies.csv a MongoDB (colecciones ratings_raw y movies_raw)."""
-    client, db = get_mongo()  
+    client, db = get_mongo()
 
     ratings_csv = SAMPLES / "ratings.csv"
     movies_csv = SAMPLES / "movies.csv"
@@ -23,7 +24,7 @@ def main() -> None:
     ratings_df = pd.read_csv(ratings_csv)
     movies_df = pd.read_csv(movies_csv)
 
-    # Limpieza y carga 
+    # Limpieza y carga
     db.ratings_raw.drop()
     db.movies_raw.drop()
 

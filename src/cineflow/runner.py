@@ -2,28 +2,25 @@
 from __future__ import annotations
 
 import argparse
+import io
 import os
 import sys
 import time
 from contextlib import contextmanager
-from typing import Iterator, Optional
+from typing import Iterator, Optional, cast
 
+from cineflow.dq.checks import validate_movies, validate_ratings
 from cineflow.pipelines.ingest_raw import main as step_ingest
-from cineflow.dq.checks import validate_ratings, validate_movies
 from cineflow.pipelines.load_warehouse import main as step_load
 from cineflow.storage.postgres_admin import create_indexes_and_views
-
-import io
-from typing import Iterator, Optional, cast
 
 
 def _supports_unicode() -> bool:
     enc = (sys.stdout.encoding or "").lower()
     return "utf" in enc
 
-_USE_EMOJI = (
-    os.getenv("NO_EMOJI", "").lower() not in {"1", "true"} and _supports_unicode()
-)
+
+_USE_EMOJI = os.getenv("NO_EMOJI", "").lower() not in {"1", "true"} and _supports_unicode()
 
 SYMS = {
     "play": "▶" if _USE_EMOJI else ">",

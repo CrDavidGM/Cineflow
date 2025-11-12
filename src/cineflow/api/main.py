@@ -1,12 +1,15 @@
 from fastapi import FastAPI, Query
 from sqlalchemy import text
+
 from cineflow.storage.postgres_client import get_engine
 
 app = FastAPI(title="CineFlow API")
 
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
 
 @app.get("/movies/top")
 def top_movies(limit: int = Query(10, ge=1, le=100)) -> dict[str, list[dict[str, object]]]:
@@ -26,6 +29,7 @@ def top_movies(limit: int = Query(10, ge=1, le=100)) -> dict[str, list[dict[str,
         rows = c.execute(sql, {"limit": limit}).mappings().all()
     return {"items": [dict(r) for r in rows]}
 
+
 @app.get("/metrics/daily")
 def metrics_daily(since: str | None = None) -> dict[str, list[dict[str, object]]]:
     engine = get_engine()
@@ -36,6 +40,7 @@ def metrics_daily(since: str | None = None) -> dict[str, list[dict[str, object]]
     with engine.begin() as c:
         rows = c.execute(text(base), {"since": since} if since else {}).mappings().all()
     return {"items": [dict(r) for r in rows]}
+
 
 @app.get("/genres/top")
 def top_genres(limit: int = Query(10, ge=1, le=50)) -> dict[str, list[dict[str, object]]]:

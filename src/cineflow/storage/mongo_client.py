@@ -1,4 +1,5 @@
 """Cliente MongoDB para CineFlow."""
+
 from __future__ import annotations
 
 from pymongo import MongoClient

@@ -1,4 +1,5 @@
-from cineflow.dq.checks import validate_ratings, validate_movies
+from cineflow.dq.checks import validate_movies, validate_ratings
+
 
 def test_dq_checks_pass() -> None:
     validate_ratings()
