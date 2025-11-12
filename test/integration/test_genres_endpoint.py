@@ -1,9 +1,11 @@
-import subprocess
-import time
-import requests
 import os
-import sys
 import signal
+import subprocess
+import sys
+import time
+
+import requests
+
 
 def test_genres_top_endpoint() -> None:
     env = os.environ.copy()
@@ -11,7 +13,16 @@ def test_genres_top_endpoint() -> None:
     env.setdefault("MONGO_URI", "mongodb://cineflow:cineflow@localhost:27017/?authSource=admin")
 
     p = subprocess.Popen(
-        ["poetry", "run", "uvicorn", "cineflow.api.main:app", "--host", "127.0.0.1", "--port", "8002"],
+        [
+            "poetry",
+            "run",
+            "uvicorn",
+            "cineflow.api.main:app",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8002",
+        ],
         env=env,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
