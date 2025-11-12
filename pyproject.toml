@@ -2,12 +2,21 @@
 requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
+# 👇 Metadatos PEP 621 (Poetry 2)
+[project]
 name = "cineflow"
 version = "0.1.0"
 description = "Mini data pipeline: Movie ratings -> Mongo (raw) -> Postgres (warehouse) -> API + Dashboard"
-authors = ["Tu Nombre <tu@email>"]
 readme = "README.md"
+requires-python = ">=3.11,<3.13"
+authors = [{ name = "Cristhian", email = "cristhian.grados@gmail.com" }]
+dynamic = ["dependencies"]
+
+[project.scripts]
+cineflow-run = "cineflow.runner:main"
+
+# 👇 Config propia de Poetry (paquetes + deps)
+[tool.poetry]
 packages = [{ include = "cineflow", from = "src" }]
 
 [tool.poetry.dependencies]
@@ -31,9 +40,7 @@ ruff = ">=0.14.4,<0.15.0"
 httpx = ">=0.28.1,<0.29.0"
 requests = ">=2.32.5,<3.0.0"
 
-[tool.poetry.scripts]
-cineflow-run = "cineflow.runner:main"
-
+# 🔧 Herramientas
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 addopts = "-q"
