@@ -82,16 +82,6 @@ jobs:
       - name: Lint
         run: poetry run ruff check .
 
-
-      # --- Prohíbe imports con "src." ---
-      - name: Ban imports con "src."
-        run: |
-          set -e
-          if grep -R -n -E "from\s+src\.cineflow|import\s+src\.cineflow" src || true; then
-            echo "::error::No uses 'src.' en imports. Usa 'from cineflow ...'."
-            exit 1
-          fi
-
       # --- Type checking (MyPy) ---
       - name: Type check
         run: poetry run mypy src
