@@ -1,0 +1,28 @@
+# Python / Poetry
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.venv*/
+*.egg-info/
+
+# Entornos / Editor
+.vscode/
+.idea/
+
+# Archivos de entorno
+.env
+.env.*
+!.env.example  # <-- Acepta el archivo de ejemplo
+
+# Datos locales
+data/raw/
+data/processed/
+reports/
+ml-100k.zip
+ml-100k/
+
+# Docker
+*.log
+docker-compose.override.yml

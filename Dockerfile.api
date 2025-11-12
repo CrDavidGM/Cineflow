@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+# Copiamos proyecto como paquete
+COPY pyproject.toml /app/
+COPY src /app/src
+
+# Instala el proyecto (paquete cineflow) y deps
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir .
+
+# Arranque por defecto (puedes sobreescribir en compose)
+CMD ["uvicorn", "cineflow.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

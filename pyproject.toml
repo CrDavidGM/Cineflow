@@ -1,0 +1,50 @@
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "cineflow"
+version = "0.1.0"
+description = "Mini data pipeline: Movie ratings -> Mongo (raw) -> Postgres (warehouse) -> API + Dashboard"
+authors = ["Tu Nombre <tu@email>"]
+readme = "README.md"
+packages = [{ include = "cineflow", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = "*"
+uvicorn = { version = ">=0.38.0,<0.39.0", extras = ["standard"] }
+pydantic-settings = "*"
+pandas = "*"
+pymongo = "*"
+psycopg2-binary = "*"
+sqlalchemy = "*"
+python-dotenv = "*"
+prefect = "*"
+great-expectations = "*"
+streamlit = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=9.0.0,<10.0.0"
+mypy = ">=1.18.2,<2.0.0"
+ruff = ">=0.14.4,<0.15.0"
+httpx = ">=0.28.1,<0.29.0"
+requests = ">=2.32.5,<3.0.0"
+
+[tool.poetry.scripts]
+cineflow-run = "cineflow.runner:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I"]
