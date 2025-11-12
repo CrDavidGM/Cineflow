@@ -13,12 +13,10 @@ def _env_utf8() -> dict[str, str]:
     return env
 
 def test_pipeline_and_api_smoke() -> None:
-    # 1) CSVs presentes
     samples = Path("data/samples")
     assert (samples / "ratings.csv").exists()
     assert (samples / "movies.csv").exists()
 
-    # 2) Ejecuta el pipeline (sin Poetry, usando el Python actual)
     run = subprocess.run(
         [sys.executable, "-m", "cineflow.runner", "--skip-validate"],
         check=True,
@@ -26,11 +24,9 @@ def test_pipeline_and_api_smoke() -> None:
         text=True,
         env=_env_utf8(),
     )
-    # Si falla, ver stdout/stderr en el reporte
     print(run.stdout)
     print(run.stderr)
 
-    # 3) Levanta la API en background (puerto 8001)
     api = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "cineflow.api.main:app",
          "--host", "127.0.0.1", "--port", "8001"],
@@ -42,9 +38,8 @@ def test_pipeline_and_api_smoke() -> None:
     )
 
     try:
-        # Espera con reintentos a que arranque
         base = "http://127.0.0.1:8001"
-        for _ in range(40):  # ~10s máx
+        for _ in range(40): 
             try:
                 r = requests.get(f"{base}/health", timeout=0.25)
                 if r.status_code == 200:
@@ -52,7 +47,6 @@ def test_pipeline_and_api_smoke() -> None:
             except Exception:
                 time.sleep(0.25)
         else:
-            # si nunca respondió, vuelca logs
             if api.stdout:
                 print(api.stdout.read())
             raise AssertionError("La API no inició a tiempo")

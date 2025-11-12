@@ -27,7 +27,7 @@ def load_mv(since: Optional[date]) -> pd.DataFrame:
     params: Dict[str, Any] = {}
     if since is not None:
         sql += " WHERE rating_date >= :since"
-        params["since"] = since  # date funciona con SQLAlchemy
+        params["since"] = since 
     sql += " ORDER BY rating_date"
     with engine.begin() as conn:
         df = pd.read_sql(text(sql), conn, params=params)

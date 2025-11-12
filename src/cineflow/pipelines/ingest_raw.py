@@ -23,7 +23,7 @@ def main() -> None:
     ratings_df = pd.read_csv(ratings_csv)
     movies_df = pd.read_csv(movies_csv)
 
-    # Limpieza y carga (upsert simple para demo)
+    # Limpieza y carga 
     db.ratings_raw.drop()
     db.movies_raw.drop()
 

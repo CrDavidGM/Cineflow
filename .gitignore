@@ -14,7 +14,7 @@ __pycache__/
 # Archivos de entorno
 .env
 .env.*
-!.env.example  # <-- Acepta el archivo de ejemplo
+!.env.example 
 
 # Datos locales
 data/raw/

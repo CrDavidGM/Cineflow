@@ -57,16 +57,14 @@ def convert_movies(base: Path) -> pd.DataFrame:
     ncols = raw.shape[1]
     g = len(genres_list)
 
-    # u.item: [movieId, title, release_date, video_release_date, imdb_url] + g flags
     min_expected = 5 + g
     if ncols < min_expected:
         raise ValueError(f"u.item tiene {ncols} columnas, pero se esperaban al menos {min_expected}.")
 
-    # Tomamos movieId(0), title(1) y los últimos g flags
     core = raw.iloc[:, [0, 1] + list(range(ncols - g, ncols))].copy()
     core.columns = ["movieId", "title"] + genres_list
 
-    def flags_to_genres(row: pd.Series) -> str:  # type: ignore[type-arg]
+    def flags_to_genres(row: pd.Series) -> str: 
         present = [name for name in genres_list if row[name] == 1]
         return "|".join(present) if present else "(no genres listed)"
 

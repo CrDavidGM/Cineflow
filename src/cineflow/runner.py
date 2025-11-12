@@ -8,7 +8,6 @@ import time
 from contextlib import contextmanager
 from typing import Iterator, Optional
 
-# Pasos del pipeline
 from cineflow.pipelines.ingest_raw import main as step_ingest
 from cineflow.dq.checks import validate_ratings, validate_movies
 from cineflow.pipelines.load_warehouse import main as step_load
@@ -18,17 +17,14 @@ import io
 from typing import Iterator, Optional, cast
 
 
-# ---------- Soporte de consola (evitar errores de Unicode) ----------
 def _supports_unicode() -> bool:
     enc = (sys.stdout.encoding or "").lower()
     return "utf" in enc
 
-# Permitir desactivar emojis/símbolos si NO_EMOJI=1|true
 _USE_EMOJI = (
     os.getenv("NO_EMOJI", "").lower() not in {"1", "true"} and _supports_unicode()
 )
 
-# Fallbacks ASCII si la consola no es UTF-8 o el usuario lo desactiva
 SYMS = {
     "play": "▶" if _USE_EMOJI else ">",
     "ok": "✔" if _USE_EMOJI else "OK",
@@ -39,7 +35,6 @@ SYMS = {
     "boom": "❌" if _USE_EMOJI else "ERROR",
 }
 
-# Reconfigura stdout/stderr a UTF-8 si es posible para evitar UnicodeEncodeError
 try:
     stdout = cast(io.TextIOWrapper, sys.stdout)
     stderr = cast(io.TextIOWrapper, sys.stderr)

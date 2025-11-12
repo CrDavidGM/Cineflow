@@ -6,7 +6,7 @@ def validate_ratings() -> None:
     df = pd.read_csv(BASE / "ratings.csv")
     assert df["rating"].between(0, 5).all(), "Ratings fuera de 0–5"
     assert df[["userId","movieId","timestamp"]].notna().all().all(), "Nulos en claves"
-    # Duplicados exactos (mismo user-movie-ts) no deberían existir
+
     dups = df.duplicated(subset=["userId","movieId","timestamp"]).sum()
     assert dups == 0, f"Duplicados en ratings: {dups}"
 
