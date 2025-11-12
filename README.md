@@ -20,15 +20,15 @@ pip install -e .
    - movies  -> `movies.csv`  con: movieId,title,genres
 5) Ejecuta la primera ingesta a Mongo (raw):
 ```bash
-python -m src.pipelines.ingest_raw
+python -m pipelines.ingest_raw
 ```
 6) Carga curada a Postgres:
 ```bash
-python -m src.pipelines.load_warehouse
+python -m pipelines.load_warehouse
 ```
 7) API:
 ```bash
-uvicorn src.api.main:app --reload
+uvicorn api.main:app --reload
 ```
 8) Dashboard:
 ```bash
