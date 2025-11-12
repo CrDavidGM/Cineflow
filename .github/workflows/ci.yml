@@ -99,6 +99,12 @@ jobs:
       - name: Convert to CSV
         run: poetry run python -m cineflow.tools.convert_ml100k
 
+      - name: Bootstrap warehouse (create schema + load data)
+        run: |
+          poetry run python -m cineflow.pipelines.ingest_raw
+          poetry run python -m cineflow.pipelines.load_warehouse
+          poetry run python -m cineflow.storage.postgres_admin
+
       # --- Ejecutar tests unitarios e integración ---
       - name: Run tests
         run: poetry run pytest -q

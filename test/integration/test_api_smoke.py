@@ -13,3 +13,4 @@ def test_health_inmemory() -> None:
 def test_movies_top_inmemory() -> None:
     r = client.get("/movies/top?limit=5")
     assert r.status_code == 200
+
