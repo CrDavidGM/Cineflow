@@ -1,27 +1,47 @@
 import subprocess
 import time
-
 import requests
-
+import os
+import sys
+import signal
 
 def test_genres_top_endpoint() -> None:
-    api = subprocess.Popen(
-        [
-            "poetry",
-            "run",
-            "uvicorn",
-            "cineflow.api.main:app",
-            "--host",
-            "127.0.0.1",
-            "--port",
-            "8002",
-        ]
+    env = os.environ.copy()
+    env.setdefault("POSTGRES_HOST", "localhost")
+    env.setdefault("MONGO_URI", "mongodb://cineflow:cineflow@localhost:27017/?authSource=admin")
+
+    p = subprocess.Popen(
+        ["poetry", "run", "uvicorn", "cineflow.api.main:app", "--host", "127.0.0.1", "--port", "8002"],
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
     )
     try:
-        time.sleep(2.0)
-        r = requests.get("http://127.0.0.1:8000/genres/top?limit=5", timeout=10)
+        # Esperar hasta que /health responda (máx. 6 s)
+        for _ in range(30):
+            try:
+                r = requests.get("http://127.0.0.1:8002/health", timeout=1.0)
+                if r.status_code == 200:
+                    break
+            except Exception:
+                time.sleep(0.2)
+        else:
+            raise RuntimeError("API no respondió /health")
+
+        r = requests.get("http://127.0.0.1:8002/genres/top?limit=5", timeout=10)
         assert r.status_code == 200
-        data = r.json()
-        assert "items" in data
+        assert "items" in r.json()
     finally:
-        api.terminate()
+        if sys.platform.startswith("win"):
+            p.terminate()
+        else:
+            os.kill(p.pid, signal.SIGTERM)
+
+        if p.stdout:
+            try:
+                out = p.stdout.read()
+                if out:
+                    print("\n--- uvicorn logs ---\n", out)
+            except Exception:
+                pass
